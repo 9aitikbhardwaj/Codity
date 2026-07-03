@@ -1,18 +1,7 @@
-<h1 align="center">⚡ Distributed Job Scheduler</h1>
+<h1 align="center">⚡ NexusSync - Distributed Job Scheduler</h1>
 
 <p align="center">
-<<<<<<< HEAD
-  A production-ready, distributed job scheduling platform with a modern React dashboard, robust Node.js/TypeScript backend, and MySQL database.
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Node.js-20+-339933?style=for-the-badge&logo=node.js&logoColor=white" alt="Node.js" />
-  <img src="https://img.shields.io/badge/TypeScript-5.5-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
-  <img src="https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React" />
-  <img src="https://img.shields.io/badge/MySQL-8.0+-4479A1?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL" />
-  <img src="https://img.shields.io/badge/Socket.IO-4.7-010101?style=for-the-badge&logo=socket.io&logoColor=white" alt="Socket.IO" />
-=======
-A scalable, production-ready distributed job scheduling platform built using <b>React, Node.js, TypeScript, MySQL, and Socket.IO</b>.
+A production-ready distributed job scheduling platform built with React, Node.js, TypeScript, MySQL, and Socket.IO.
 </p>
 
 <p align="center">
@@ -22,322 +11,170 @@ A scalable, production-ready distributed job scheduling platform built using <b>
 ![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=black)
 ![MySQL](https://img.shields.io/badge/MySQL-8+-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
 ![Socket.IO](https://img.shields.io/badge/Socket.IO-4.7-010101?style=for-the-badge&logo=socket.io&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 
->>>>>>> 49cd18bf3eb2db80dc442ab0da3fa335e569202f
 </p>
 
 ---
 
-<<<<<<< HEAD
-## 📖 Table of Contents
+# 📖 Table of Contents
 
-- [Overview](#-overview)
-- [Features](#-features)
-- [Architecture](#-architecture)
-- [Tech Stack](#-tech-stack)
-- [Database Schema](#-database-schema)
-- [API Reference](#-api-reference)
-- [Getting Started](#-getting-started)
-- [Environment Variables](#-environment-variables)
-- [Running the Application](#-running-the-application)
-- [Default Credentials](#-default-credentials)
-- [Project Structure](#-project-structure)
-
----
-
-## 🌟 Overview
-
-This platform provides a scalable, fault-tolerant job scheduling system capable of handling high-throughput background work. It supports **cron-based scheduling**, **DAG-style job dependencies**, **configurable retry policies**, **dead-letter queue (DLQ) handling**, **real-time worker heartbeat monitoring**, and a **live analytics dashboard**.
+- Overview
+- Features
+- Project Screenshots
+- Architecture
+- Tech Stack
+- Database Schema
+- API Modules
+- Installation
+- Environment Variables
+- Running the Project
+- Folder Structure
+- Future Enhancements
+- Contributing
+- License
+- Author
 
 ---
 
-## ✨ Features
+# 🚀 Overview
 
-### ⚙️ Core Scheduling Engine
-- **Atomic Job Claiming** — Workers claim jobs using database transactions to prevent double-processing
-- **Cron Expression Support** — Schedule recurring jobs with standard cron syntax
-- **Priority-Based Queuing** — Three priority levels (Low, Medium, High) with configurable concurrency limits
-- **DAG Workflow Support** — Define parent-child job dependencies for ordered pipeline execution
+**NexusSync** is a scalable distributed job scheduling platform that executes asynchronous workloads across multiple worker nodes. It supports cron scheduling, retry mechanisms, dead-letter queues, DAG-based workflows, worker monitoring, and a real-time analytics dashboard.
 
-### 🔁 Retry & Fault Tolerance
-- **Configurable Retry Policies** — Three strategies: Fixed Delay, Linear Backoff, Exponential Backoff
-- **Dead Letter Queue (DLQ)** — Failed jobs beyond max retries are moved to DLQ for inspection and replay
-- **Orphaned Job Recovery** — Automatic recovery of jobs from crashed or timed-out workers
-- **Worker Heartbeat Tracking** — Workers send heartbeats every 5 seconds; stale workers are auto-detected
-
-### 📊 Real-Time Dashboard
-- **Live Job Explorer** — Browse, filter, search, and manage all jobs with real-time status updates
-- **Queue Manager** — Create, pause/resume queues, configure retry policies and concurrency
-- **Worker Monitor** — Track active workers, their status, load, and last heartbeat
-- **Log Viewer** — View per-execution stdout/stderr logs inline
-- **System Analytics** — Throughput metrics, success/failure rates, DLQ stats, and more
-
-### 🔐 Authentication & Authorization
-- **JWT-based authentication** with 24-hour token expiry
-- **Role-based access control** (`admin` and `member` roles)
-- **bcrypt password hashing**
-
-### 🔌 Real-Time Events
-- **Socket.IO** integration for live job status updates, worker heartbeats, and dashboard metrics
-
----
-
-## 🏗️ Architecture
-
-```
-┌─────────────────────────────────────────────────────┐
-│                   React Frontend (Vite)              │
-│  Dashboard | Job Explorer | Queue Manager | Workers  │
-└──────────────────────┬──────────────────────────────┘
-                       │ HTTP REST + WebSocket (Socket.IO)
-┌──────────────────────▼──────────────────────────────┐
-│              Express API Server (Node.js/TS)         │
-│   Auth | Jobs | Queues | Workers | Analytics         │
-└──────────────────────┬──────────────────────────────┘
-                       │
-        ┌──────────────┼────────────────┐
-        │              │                │
-┌───────▼──────┐ ┌─────▼──────┐ ┌──────▼──────┐
-│   MySQL DB   │ │  Scheduler │ │   Worker(s) │
-│  (schema.sql)│ │  (cron)    │ │  (poller)   │
-└──────────────┘ └────────────┘ └─────────────┘
-```
-
-The system consists of **three independent processes** that all connect to the same MySQL database:
-
-| Process | Description |
-|---|---|
-| **API Server** (`server.ts`) | Handles HTTP REST API & WebSocket connections |
-| **Scheduler** (`scheduler.ts`) | Enqueues scheduled/cron jobs at the right time |
-| **Worker** (`worker.ts`) | Polls for and executes claimed jobs |
-
-Multiple **Worker** processes can run concurrently for horizontal scaling.
-
----
-
-## 🛠️ Tech Stack
-
-### Backend
-| Package | Version | Purpose |
-|---|---|---|
-| `express` | ^4.19 | HTTP server & REST API |
-| `socket.io` | ^4.7 | Real-time WebSocket events |
-| `mysql2` | ^3.10 | MySQL database driver |
-| `jsonwebtoken` | ^9.0 | JWT authentication |
-| `bcryptjs` | ^2.4 | Password hashing |
-| `cron-parser` | ^4.9 | Cron expression parsing |
-| `typescript` | ^5.5 | Type safety |
-| `ts-node` / `nodemon` | latest | Dev workflow |
-
-### Frontend
-| Package | Version | Purpose |
-|---|---|---|
-| `react` | ^18.3 | UI framework |
-| `vite` | ^5.3 | Build tool & dev server |
-| `socket.io-client` | ^4.7 | Real-time WebSocket client |
-| `lucide-react` | ^0.395 | Icon library |
-| `typescript` | ^5.5 | Type safety |
-
----
-
-## 🗄️ Database Schema
-
-The MySQL database (`scheduler_db`) contains **10 tables**:
-
-| Table | Description |
-|---|---|
-| `users` | User accounts with hashed passwords and roles |
-| `organizations` | Top-level organizational units |
-| `projects` | Projects grouped under an organization |
-| `retry_policies` | Named retry strategies (fixed, linear, exponential) |
-| `queues` | Job queues with priority, concurrency, and retry policy |
-| `jobs` | Individual job records with status, payload, and scheduling info |
-| `job_dependencies` | Parent-child relationships for DAG workflows |
-| `workers` | Registered worker instances with heartbeat tracking |
-| `job_executions` | Per-execution logs including stdout/stderr and duration |
-| `dead_letter_queue` | Jobs that exhausted all retries |
-
-**Job Status Lifecycle:**
-```
-queued → scheduled → claimed → running → completed
-                                       ↘ failed → (retry) → dlq
-```
-
----
-
-## 🔌 API Reference
-
-### Auth
-| Method | Endpoint | Description |
-|---|---|---|
-| `POST` | `/api/auth/register` | Register a new user |
-| `POST` | `/api/auth/login` | Login and receive JWT token |
-| `GET` | `/api/auth/me` | Get current user profile |
-
-### Jobs
-| Method | Endpoint | Description |
-|---|---|---|
-| `GET` | `/api/jobs` | List all jobs (filterable by status, queue) |
-| `POST` | `/api/jobs` | Create a new job |
-| `GET` | `/api/jobs/:id` | Get a specific job |
-| `PUT` | `/api/jobs/:id/cancel` | Cancel a pending job |
-| `POST` | `/api/jobs/:id/retry` | Retry a failed/DLQ job |
-| `GET` | `/api/jobs/:id/executions` | Get execution history for a job |
-
-### Queues
-| Method | Endpoint | Description |
-|---|---|---|
-| `GET` | `/api/queues` | List all queues |
-| `POST` | `/api/queues` | Create a new queue |
-| `PUT` | `/api/queues/:id/pause` | Pause/resume a queue |
-| `DELETE` | `/api/queues/:id` | Delete a queue |
-
-### Workers
-| Method | Endpoint | Description |
-|---|---|---|
-| `GET` | `/api/workers` | List all registered workers |
-| `GET` | `/api/workers/:id` | Get worker details |
-
-### Analytics
-| Method | Endpoint | Description |
-|---|---|---|
-| `GET` | `/api/analytics/summary` | System-wide job stats |
-| `GET` | `/api/analytics/throughput` | Jobs processed over time |
-| `GET` | `/api/analytics/dlq` | Dead letter queue stats |
-
-### Retry Policies
-| Method | Endpoint | Description |
-|---|---|---|
-| `GET` | `/api/retry-policies` | List all retry policies |
-| `POST` | `/api/retry-policies` | Create a new retry policy |
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- **Node.js** v20+
-- **MySQL** 8.0+
-- **npm** v9+
-
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/your-username/distributed-job-scheduler.git
-cd distributed-job-scheduler
-```
-
-### 2. Set Up the Database
-
-Start your MySQL server and run the schema:
-
-```bash
-mysql -u root -p < backend/src/schema.sql
-```
-
-This will:
-- Create the `scheduler_db` database
-- Create all tables and indexes
-- Seed default organization, user, project, retry policies, and queues
-
-### 3. Configure Environment Variables
-
-```bash
-cd backend
-cp .env .env.local   # or just edit .env directly
-```
-
-Edit `backend/.env` with your settings (see [Environment Variables](#-environment-variables)).
-
-### 4. Install Dependencies
-
-```bash
-# Backend
-cd backend
-npm install
-
-# Frontend
-cd ../frontend
-=======
-# 📌 Overview
-
-Distributed Job Scheduler is a modern job scheduling platform designed to execute background jobs reliably across multiple workers. It supports cron scheduling, job dependencies, retry mechanisms, worker monitoring, real-time dashboards, and fault-tolerant execution.
-
-The system is built with scalability and production-readiness in mind, making it suitable for handling large numbers of asynchronous jobs efficiently.
+The application is designed with production-readiness, reliability, and horizontal scalability in mind.
 
 ---
 
 # ✨ Features
 
-## ⚙️ Job Scheduling
+## ⚙️ Scheduling Engine
 
+- One-time job scheduling
 - Cron-based recurring jobs
-- One-time scheduled jobs
-- Priority-based queues
-- DAG (Directed Acyclic Graph) job dependencies
+- Priority queues
 - Atomic job claiming
+- DAG workflow support
+- Configurable concurrency
+
+---
 
 ## 🔁 Fault Tolerance
 
-- Configurable retry policies
 - Fixed Delay Retry
-- Linear Backoff Retry
-- Exponential Backoff Retry
+- Linear Backoff
+- Exponential Backoff
 - Dead Letter Queue (DLQ)
-- Automatic orphaned job recovery
+- Automatic orphan recovery
 - Worker heartbeat monitoring
+
+---
 
 ## 📊 Dashboard
 
-- Live Job Explorer
-- Queue Manager
-- Worker Monitor
-- Execution Log Viewer
-- Analytics Dashboard
-- Success & Failure Statistics
+- Live analytics
+- Queue overview
+- Throughput charts
+- Worker monitoring
+- Success & Failure metrics
+- Real-time updates
 
-## 🔐 Authentication
+---
+
+## 🔐 Security
 
 - JWT Authentication
 - Role-Based Access Control
 - bcrypt Password Hashing
 
-## ⚡ Real-Time Communication
+---
 
-- Socket.IO integration
-- Live job updates
-- Worker heartbeat updates
-- Dashboard auto-refresh
+## ⚡ Real-Time
+
+- Socket.IO
+- Live worker heartbeat
+- Queue updates
+- Dashboard synchronization
+
+---
+
+# 📸 Project Screenshots
+
+## Dashboard
+
+<p align="center">
+<img src="assets/screenshots/Dashboard.png" width="100%">
+</p>
+
+Real-time overview of queues, workers, throughput, execution statistics, and scheduling performance.
+
+---
+
+## Queue Manager
+
+<p align="center">
+<img src="assets/screenshots/Queue manager.png" width="100%">
+</p>
+
+Manage queues, retry policies, concurrency limits, priorities, and execution settings.
+
+---
+
+## Job Explorer
+
+<p align="center">
+<img src="assets/screenshots/Job Explorer.png" width="100%">
+</p>
+
+Search, filter, trigger, and monitor scheduled jobs with execution history and retry status.
+
+---
+
+## Worker Monitor
+
+<p align="center">
+<img src="assets/screenshots/Workers.png" width="100%">
+</p>
+
+Monitor worker nodes, cluster health, heartbeat status, and concurrency utilization.
+
+---
+
+## GitHub Repository
+
+<p align="center">
+<img src="assets/screenshots/github.png" width="100%">
+</p>
+
+Repository structure including backend, frontend, documentation, and deployment.
 
 ---
 
 # 🏗️ System Architecture
 
 ```
-React Frontend
-        │
- REST API + Socket.IO
-        │
-Node.js + Express Server
-        │
- ┌───────────────┐
- │               │
-Scheduler     Worker(s)
- │               │
- └──────┬────────┘
-        │
-      MySQL
+                    React Frontend
+                           │
+              REST API + Socket.IO
+                           │
+                 Express API Server
+                           │
+        ┌──────────────────┼─────────────────┐
+        │                  │                 │
+   Scheduler           Worker(s)         Analytics
+        │                  │
+        └──────────────┬───┘
+                       │
+                    MySQL Database
 ```
 
-The application consists of four major components:
+The system consists of four independent components:
 
-- React Frontend
-- Express API Server
+- React Dashboard
+- Express REST API
 - Scheduler Service
-- Worker Processes
+- Worker Cluster
 
-All components communicate through a shared MySQL database.
+All services communicate through a shared MySQL database.
 
 ---
 
@@ -357,201 +194,120 @@ All components communicate through a shared MySQL database.
 - Express.js
 - TypeScript
 - Socket.IO
-- JWT Authentication
+- JWT
 - bcrypt
 - mysql2
 
 ## Database
 
-- MySQL 8+
+- MySQL 8
+
+## Development Tools
+
+- npm
+- Nodemon
+- ts-node
+- Git
+- GitHub
 
 ---
 
-# 📂 Database Tables
+# 🗄️ Database Schema
 
-The project contains the following tables:
+The application contains the following tables:
 
-- users
-- organizations
-- projects
-- retry_policies
-- queues
-- jobs
-- job_dependencies
-- workers
-- job_executions
-- dead_letter_queue
-
----
-
-# 🚀 Key Functionalities
-
-- Create Jobs
-- Schedule Jobs
-- Retry Failed Jobs
-- Worker Monitoring
-- Queue Management
-- Analytics Dashboard
-- Job Execution Logs
-- Role Management
-- Dead Letter Queue
-- Real-Time Notifications
+| Table | Purpose |
+|---------|----------|
+| users | Authentication |
+| organizations | Organizations |
+| projects | Project Management |
+| retry_policies | Retry Configurations |
+| queues | Queue Configuration |
+| jobs | Job Records |
+| job_dependencies | DAG Workflows |
+| workers | Worker Registry |
+| job_executions | Execution History |
+| dead_letter_queue | Failed Jobs |
 
 ---
 
-# 📦 Installation
+# 📡 API Modules
+
+## Authentication
+
+- Register
+- Login
+- User Profile
+
+## Jobs
+
+- Create Job
+- Trigger Job
+- Retry Job
+- Cancel Job
+- Job History
+
+## Queues
+
+- Create Queue
+- Pause Queue
+- Resume Queue
+- Delete Queue
+
+## Workers
+
+- Worker Status
+- Heartbeats
+- Cluster Monitoring
+
+## Analytics
+
+- Throughput
+- Success Rate
+- Queue Statistics
+- DLQ Metrics
+
+---
+
+# ⚙️ Installation
 
 ## Clone Repository
 
 ```bash
-git clone https://github.com/your-username/distributed-job-scheduler.git
+git clone https://github.com/yourusername/nexussync.git
 ```
 
 ```
-cd distributed-job-scheduler
+cd nexussync
 ```
 
 ---
 
-## Backend
+## Install Backend
 
-```
+```bash
 cd backend
->>>>>>> 49cd18bf3eb2db80dc442ab0da3fa335e569202f
 npm install
 ```
 
 ---
 
-<<<<<<< HEAD
-## 🔧 Environment Variables
+## Install Frontend
 
-Create / edit `backend/.env` with the following variables:
-
-```env
-PORT=5000
-DB_HOST=localhost
-DB_PORT=3306
-DB_USER=root
-DB_PASSWORD=your_mysql_password
-DB_DATABASE=scheduler_db
-JWT_SECRET=your_super_secret_jwt_key_here
-NODE_ENV=development
-```
-
-| Variable | Default | Description |
-|---|---|---|
-| `PORT` | `5000` | Port for the API server |
-| `DB_HOST` | `localhost` | MySQL host |
-| `DB_PORT` | `3306` | MySQL port |
-| `DB_USER` | `root` | MySQL username |
-| `DB_PASSWORD` | — | MySQL password |
-| `DB_DATABASE` | `scheduler_db` | Database name |
-| `JWT_SECRET` | — | Secret key for JWT signing |
-| `NODE_ENV` | `development` | Node environment |
-
----
-
-## ▶️ Running the Application
-
-You need to run **three backend processes** and the **frontend dev server** — each in a separate terminal.
-
-### Terminal 1 — API Server
 ```bash
-cd backend
-npm run dev
-# Starts on http://localhost:5000
-```
-
-### Terminal 2 — Scheduler
-```bash
-cd backend
-npm run scheduler
-# Picks up cron/scheduled jobs and enqueues them
-```
-
-### Terminal 3 — Worker
-```bash
-cd backend
-npm run worker
-# Polls for and executes jobs (run multiple for scaling)
-```
-
-### Terminal 4 — Frontend
-```bash
-cd frontend
-npm run dev
-# Starts on http://localhost:5173
-```
-
-Open your browser at **http://localhost:5173** and log in with the default credentials.
-
-> **Scaling Workers**: To add more worker capacity, start additional `npm run worker` processes in new terminals. Each worker registers itself with a unique ID and operates independently.
-
----
-
-## 🔑 Default Credentials
-
-After running the schema SQL, a seed admin account is created:
-
-| Field | Value |
-|---|---|
-| **Email** | `admin@acme.com` |
-| **Password** | `admin123` |
-| **Role** | `admin` |
-
-> ⚠️ **Change the default password immediately in any non-development environment.**
-
----
-
-## 📁 Project Structure
-
-```
-distributed-job-scheduler/
-├── backend/
-│   ├── src/
-│   │   ├── server.ts          # Express API server + Socket.IO
-│   │   ├── worker.ts          # Job worker process (poller + executor)
-│   │   ├── scheduler.ts       # Cron/scheduled job enqueuer
-│   │   ├── database.ts        # MySQL connection pool
-│   │   ├── eventBus.ts        # Socket.IO event emitter
-│   │   ├── schema.sql         # Full DB schema + seed data
-│   │   ├── middleware/
-│   │   │   └── auth.ts        # JWT authentication middleware
-│   │   └── tests/
-│   │       └── run.ts         # Integration tests
-│   ├── package.json
-│   ├── tsconfig.json
-│   └── .env
-│
-└── frontend/
-    ├── src/
-    │   ├── App.tsx             # Root app + routing
-    │   ├── main.tsx            # React entry point
-    │   ├── index.css           # Global styles
-    │   └── components/
-    │       ├── Dashboard.tsx       # System overview & analytics
-    │       ├── JobExplorer.tsx     # Job list, filter, create, manage
-    │       ├── QueueManager.tsx    # Queue CRUD & configuration
-    │       ├── WorkerMonitor.tsx   # Worker status & heartbeat view
-    │       └── LogViewer.tsx       # Execution log display
-    ├── index.html
-    ├── package.json
-    ├── tsconfig.json
-    └── vite.config.ts
-=======
-## Frontend
-
-```
 cd frontend
 npm install
 ```
 
 ---
 
-# ⚙️ Environment Variables
+# 🔧 Environment Variables
 
-Create a `.env` file inside the backend folder.
+Create:
+
+```
+backend/.env
+```
 
 ```env
 PORT=5000
@@ -559,7 +315,7 @@ PORT=5000
 DB_HOST=localhost
 DB_PORT=3306
 DB_USER=root
-DB_PASSWORD=your_password
+DB_PASSWORD=yourpassword
 DB_DATABASE=scheduler_db
 
 JWT_SECRET=your_secret_key
@@ -571,7 +327,7 @@ NODE_ENV=development
 
 # ▶️ Running the Project
 
-## API Server
+## Backend API
 
 ```bash
 cd backend
@@ -596,6 +352,8 @@ cd backend
 npm run worker
 ```
 
+Multiple workers can be started for horizontal scaling.
+
 ---
 
 ## Frontend
@@ -605,7 +363,7 @@ cd frontend
 npm run dev
 ```
 
-Open
+Visit:
 
 ```
 http://localhost:5173
@@ -613,30 +371,18 @@ http://localhost:5173
 
 ---
 
-# 🔑 Default Login
-
-| Email | Password |
-|--------|----------|
-| admin@acme.com | admin123 |
-
-> Change the default password before deploying.
-
----
-
-# 📁 Project Structure
+# 📂 Folder Structure
 
 ```
-distributed-job-scheduler
+NexusSync
+│
+├── assets
+│   └── screenshots
 │
 ├── backend
 │   ├── src
-│   │   ├── server.ts
-│   │   ├── scheduler.ts
-│   │   ├── worker.ts
-│   │   ├── database.ts
-│   │   ├── schema.sql
-│   │   └── middleware
-│   │
+│   ├── middleware
+│   ├── schema.sql
 │   ├── package.json
 │   └── .env
 │
@@ -647,20 +393,11 @@ distributed-job-scheduler
 │   └── vite.config.ts
 │
 └── README.md
->>>>>>> 49cd18bf3eb2db80dc442ab0da3fa335e569202f
 ```
 
 ---
 
-<<<<<<< HEAD
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create your feature branch: `git checkout -b feature/my-new-feature`
-3. Commit your changes: `git commit -m 'Add some feature'`
-4. Push to the branch: `git push origin feature/my-new-feature`
-=======
-# 📊 Job Lifecycle
+# 📈 Job Lifecycle
 
 ```
 Queued
@@ -687,32 +424,31 @@ Running
 
 ---
 
-# 🌟 Highlights
+# 🌟 Future Enhancements
 
-- Production-ready architecture
-- Distributed worker execution
-- Real-time dashboard
-- Secure JWT authentication
-- Socket.IO integration
-- Retry policies
-- Queue management
-- Worker monitoring
-- Analytics
-- Fault tolerance
-- Highly scalable
-- Clean TypeScript codebase
+- Kubernetes Deployment
+- Docker Support
+- Email Notifications
+- Slack Integration
+- Distributed Cache (Redis)
+- Prometheus Metrics
+- Grafana Dashboard
+- Multi-Tenant Support
+- OAuth Authentication
+- RabbitMQ/Kafka Integration
 
 ---
 
 # 🤝 Contributing
 
-Contributions are welcome.
+Contributions are welcome!
 
 1. Fork the repository
-2. Create a feature branch
+
+2. Create a new feature branch
 
 ```bash
-git checkout -b feature-name
+git checkout -b feature/new-feature
 ```
 
 3. Commit your changes
@@ -724,22 +460,16 @@ git commit -m "Added new feature"
 4. Push the branch
 
 ```bash
-git push origin feature-name
+git push origin feature/new-feature
 ```
 
->>>>>>> 49cd18bf3eb2db80dc442ab0da3fa335e569202f
 5. Open a Pull Request
 
 ---
 
-<<<<<<< HEAD
-## 📄 License
-
-This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
-=======
 # 📄 License
 
-This project is developed for educational and learning purposes.
+This project is licensed under the MIT License.
 
 ---
 
@@ -747,9 +477,17 @@ This project is developed for educational and learning purposes.
 
 **Naitik Bhardwaj**
 
-B.Tech CSE Student
-
+B.Tech Computer Science & Engineering  
 SRM Institute of Science and Technology
 
 GitHub: https://github.com/9aitikbhardwaj
->>>>>>> 49cd18bf3eb2db80dc442ab0da3fa335e569202f
+
+---
+
+<p align="center">
+
+⭐ If you like this project, don't forget to give it a star!
+
+Made with ❤️ using React, Node.js & TypeScript.
+
+</p>
