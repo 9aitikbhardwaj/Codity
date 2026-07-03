@@ -102,7 +102,7 @@ The application is designed with production-readiness, reliability, and horizont
 ## Dashboard
 
 <p align="center">
-<img src="assets/screenshots/Dashboard.png" width="100%">
+<img src="Dashboard.png" width="100%">
 </p>
 
 Real-time overview of queues, workers, throughput, execution statistics, and scheduling performance.
@@ -112,7 +112,7 @@ Real-time overview of queues, workers, throughput, execution statistics, and sch
 ## Queue Manager
 
 <p align="center">
-<img src="assets/screenshots/Queue manager.png" width="100%">
+<img src="Queue manager.png" width="100%">
 </p>
 
 Manage queues, retry policies, concurrency limits, priorities, and execution settings.
@@ -122,7 +122,7 @@ Manage queues, retry policies, concurrency limits, priorities, and execution set
 ## Job Explorer
 
 <p align="center">
-<img src="assets/screenshots/Job Explorer.png" width="100%">
+<img src="Job Explorer.png" width="100%">
 </p>
 
 Search, filter, trigger, and monitor scheduled jobs with execution history and retry status.
@@ -132,7 +132,7 @@ Search, filter, trigger, and monitor scheduled jobs with execution history and r
 ## Worker Monitor
 
 <p align="center">
-<img src="assets/screenshots/Workers.png" width="100%">
+<img src="Workers.png" width="100%">
 </p>
 
 Monitor worker nodes, cluster health, heartbeat status, and concurrency utilization.
@@ -142,7 +142,7 @@ Monitor worker nodes, cluster health, heartbeat status, and concurrency utilizat
 ## GitHub Repository
 
 <p align="center">
-<img src="assets/screenshots/github.png" width="100%">
+<img src="github.png" width="100%">
 </p>
 
 Repository structure including backend, frontend, documentation, and deployment.
